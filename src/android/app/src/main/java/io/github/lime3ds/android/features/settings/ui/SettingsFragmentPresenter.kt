@@ -6,6 +6,7 @@ package io.github.lime3ds.android.features.settings.ui
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.content.res.Configuration
 import android.content.res.Resources
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraCharacteristics
@@ -110,19 +111,21 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
 
     /** Returns the portrait mode width */
     private fun getWidth(): Int {
-        val dm = Resources.getSystem().displayMetrics;
-        return if (dm.widthPixels < dm.heightPixels)
-            dm.widthPixels
+        val bounds = settingsActivity.windowManager.currentWindowMetrics.bounds
+        val or = Resources.getSystem().configuration.orientation
+        return if (or == Configuration.ORIENTATION_PORTRAIT)
+            bounds.width()
         else
-            dm.heightPixels
+            bounds.height()
     }
 
     private fun getHeight(): Int {
-        val dm = Resources.getSystem().displayMetrics;
-        return if (dm.widthPixels < dm.heightPixels)
-            dm.heightPixels
+        val bounds = settingsActivity.windowManager.currentWindowMetrics.bounds
+        val or = Resources.getSystem().configuration.orientation
+        return if (or == Configuration.ORIENTATION_PORTRAIT)
+            bounds.width()
         else
-            dm.widthPixels
+            bounds.height()
     }
 
     private fun addConfigSettings(sl: ArrayList<SettingsItem>) {
