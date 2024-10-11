@@ -111,6 +111,7 @@ void LogSettings() {
     log_setting("Layout_PortraitLayoutOption", values.portrait_layout_option.GetValue());
     log_setting("Layout_SwapScreen", values.swap_screen.GetValue());
     log_setting("Layout_UprightScreen", values.upright_screen.GetValue());
+    log_setting("Layout_ScreenGap",values.screen_gap.GetValue());
     log_setting("Layout_LargeScreenProportion", values.large_screen_proportion.GetValue());
     log_setting("Layout_SmallScreenPosition", values.small_screen_position.GetValue());
     log_setting("Utility_DumpTextures", values.dump_textures.GetValue());
