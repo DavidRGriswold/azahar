@@ -202,8 +202,7 @@ void RestoreGlobalState(bool is_powered_on) {
     values.swap_screen.SetGlobal(true);
     values.upright_screen.SetGlobal(true);
     values.large_screen_proportion.SetGlobal(true);
-    values.vertical_screen_gap.SetGlobal(true);
-    values.horizontal_screen_gap.SetGlobal(true);
+    values.screen_gap.SetGlobal(true);
     values.small_screen_position.SetGlobal(true);
     values.bg_red.SetGlobal(true);
     values.bg_green.SetGlobal(true);
