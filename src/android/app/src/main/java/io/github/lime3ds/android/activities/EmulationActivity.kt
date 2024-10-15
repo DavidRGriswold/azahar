@@ -1,4 +1,4 @@
-// Copyright 2023 Citra Emulator Project
+// Copyright Citra Emulator Project / Lime3DS Emulator Project
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
@@ -34,6 +34,7 @@ import io.github.lime3ds.android.databinding.ActivityEmulationBinding
 import io.github.lime3ds.android.display.ScreenAdjustmentUtil
 import io.github.lime3ds.android.features.hotkeys.HotkeyUtility
 import io.github.lime3ds.android.features.settings.model.BooleanSetting
+import io.github.lime3ds.android.features.settings.model.IntSetting
 import io.github.lime3ds.android.features.settings.model.SettingsViewModel
 import io.github.lime3ds.android.features.settings.model.view.InputBindingSetting
 import io.github.lime3ds.android.fragments.EmulationFragment
@@ -75,7 +76,7 @@ class EmulationActivity : AppCompatActivity() {
         NativeLibrary.enableAdrenoTurboMode(BooleanSetting.ADRENO_GPU_BOOST.boolean)
 
         binding = ActivityEmulationBinding.inflate(layoutInflater)
-        screenAdjustmentUtil = ScreenAdjustmentUtil(windowManager, settingsViewModel.settings)
+        screenAdjustmentUtil = ScreenAdjustmentUtil(this, windowManager, settingsViewModel.settings)
         hotkeyUtility = HotkeyUtility(screenAdjustmentUtil)
         setContentView(binding.root)
 
@@ -95,10 +96,18 @@ class EmulationActivity : AppCompatActivity() {
             windowManager.defaultDisplay.rotation
         )
 
-        EmulationLifecycleUtil.addShutdownHook(hook = { this.finish() })
+        EmulationLifecycleUtil.addShutdownHook(hook = {
+            if (intent.getBooleanExtra("launched_from_shortcut", false)) {
+                finishAffinity()
+            } else {
+                this.finish()
+            }
+        })
 
         isEmulationRunning = true
         instance = this
+
+        applyOrientationSettings() // Check for orientation settings at startup
     }
 
     // On some devices, the system bars will not disappear on first boot or after some
@@ -107,6 +116,7 @@ class EmulationActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         enableFullscreenImmersive()
+        applyOrientationSettings() // Check for orientation settings changes on runtime
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -196,6 +206,11 @@ class EmulationActivity : AppCompatActivity() {
             controller.systemBarsBehavior =
                 WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         }
+    }
+
+    private fun applyOrientationSettings() {
+        val orientationOption = IntSetting.ORIENTATION_OPTION.int
+        screenAdjustmentUtil.changeActivityOrientation(orientationOption)
     }
 
     // Gets button presses
