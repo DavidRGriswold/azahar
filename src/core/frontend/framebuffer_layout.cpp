@@ -115,8 +115,7 @@ FramebufferLayout LargeFrameLayout(u32 width, u32 height, bool swapped, bool upr
     // To do that, find the total emulation box and maximize that based on window size
     const float window_aspect_ratio = static_cast<float>(height) / width;
     float emulation_aspect_ratio;
-    float gap = Settings::values.screen_gap.GetValue();
-    gap *= scale_factor;
+    u32 gap = (u32)(Settings::values.screen_gap.GetValue() * scale_factor);
     float large_height =
         swapped ? Core::kScreenBottomHeight * scale_factor : Core::kScreenTopHeight * scale_factor;
     float small_height =
