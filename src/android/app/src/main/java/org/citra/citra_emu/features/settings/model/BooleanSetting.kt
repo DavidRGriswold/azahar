@@ -50,6 +50,7 @@ enum class BooleanSetting(
     DISABLE_RIGHT_EYE_RENDER("disable_right_eye_render", Settings.SECTION_RENDERER, false),
     USE_ARTIC_BASE_CONTROLLER("use_artic_base_controller", Settings.SECTION_CONTROLS, false),
     UPRIGHT_SCREEN("upright_screen", Settings.SECTION_LAYOUT, false),
+    SECONDARY_UPRIGHT_SCREEN("upright_secondary_screen", Settings.SECTION_LAYOUT, false),
     COMPRESS_INSTALLED_CIA_CONTENT("compress_cia_installs", Settings.SECTION_STORAGE, false),
     ANDROID_HIDE_IMAGES("android_hide_images", Settings.SECTION_CORE, false);
 
