@@ -175,7 +175,8 @@ void Config::ReadValues() {
     ReadSetting("Renderer", Settings::values.custom_second_layer_opacity);
     ReadSetting("Renderer", Settings::values.delay_game_render_thread_us);
     ReadSetting("Renderer", Settings::values.disable_right_eye_render);
-
+    ReadSetting("Renderer", Settings::values.swap_eyes_3d);
+    ReadSetting("Renderer", Settings::values.render_3d_secondary_only);
     // Layout
     // Somewhat inelegant solution to ensure layout value is between 0 and 5 on read
     // since older config files may have other values
@@ -205,6 +206,7 @@ void Config::ReadValues() {
     ReadSetting("Layout", Settings::values.cardboard_x_shift);
     ReadSetting("Layout", Settings::values.cardboard_y_shift);
     ReadSetting("Layout", Settings::values.upright_screen);
+    ReadSetting("Layout", Settings::values.upright_secondary_screen);
 
     Settings::values.portrait_layout_option =
         static_cast<Settings::PortraitLayoutOption>(sdl2_config->GetInteger(

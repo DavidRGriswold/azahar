@@ -62,6 +62,13 @@ class ScreenAdjustmentUtil(
         NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode)
     }
 
+    fun changeSecondaryOrientation(layoutOption: Int) {
+        IntSetting.SECONDARY_DISPLAY_LAYOUT.int = layoutOption
+        settings.saveSetting(IntSetting.SECONDARY_DISPLAY_LAYOUT,SettingsFile.FILE_NAME_CONFIG)
+        NativeLibrary.reloadSettings()
+        NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode)
+    }
+
     fun changeActivityOrientation(orientationOption: Int) {
         val activity = context as? Activity ?: return
         IntSetting.ORIENTATION_OPTION.int = orientationOption
@@ -76,5 +83,16 @@ class ScreenAdjustmentUtil(
         NativeLibrary.reloadSettings()
         NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode)
 
+    }
+
+    fun toggleSecondaryScreenUpright() {
+        val uprightBoolean = BooleanSetting.SECONDARY_UPRIGHT_SCREEN.boolean
+        BooleanSetting.SECONDARY_UPRIGHT_SCREEN.boolean = !uprightBoolean
+        settings.saveSetting(
+            BooleanSetting.SECONDARY_UPRIGHT_SCREEN,
+            SettingsFile.FILE_NAME_CONFIG
+        )
+        NativeLibrary.reloadSettings()
+        NativeLibrary.updateFramebuffer(NativeLibrary.isPortraitMode)
     }
 }

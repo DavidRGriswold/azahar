@@ -284,6 +284,10 @@
     <string name="factor3d_description">Specifies the value of the 3D slider. This should be set to higher than 0% when Stereoscopic 3D is enabled.\nNote: Depth values over 100% are not possible on real hardware and may cause graphical issues</string>
     <string name="disable_right_eye_render">Disable Right Eye Render</string>
     <string name="disable_right_eye_render_description">Greatly improves performance in some applications, but can cause flickering in others.</string>
+    <string name="swap_eyes_3d">Swap Eyes</string>
+    <string name="swap_eyes_3d_description">Swaps which eye is shown where. Combine with Side by Side mode and cross your eyes to see 3D with no equipment!</string>
+    <string name="render_3d_secondary_only">3D on Secondary Display Only</string>
+    <string name="render_3d_secondary_only_description">If enabled, the selected 3d mode will only be applied on the secondary display (if enabled in the Layout menu). Applies to SBS modes only. </string>
     <string name="cardboard_vr">Cardboard VR</string>
     <string name="cardboard_screen_size">Cardboard Screen Size</string>
     <string name="cardboard_screen_size_description">Scales the screen to a percentage of its original size.</string>
@@ -449,6 +453,7 @@
     <string name="emulation_screen_layout_original">Original</string>
     <string name="emulation_portrait_layout_top_full">Default</string>
     <string name="emulation_secondary_display_default">System Default (mirror)</string>
+    <string name="emulation_secondary_display_reverse_primary">Opposite of Primary Display</string>
     <string name="emulation_screen_layout_custom">Custom Layout</string>
     <string name="bg_color">Background Color</string>
     <string name="bg_color_description">The color which appears behind the screens during emulation, represented as an RGB value.</string>
@@ -483,6 +488,7 @@
     <string name="emulation_cycle_landscape_layouts">Cycle Layouts</string>
     <string name="emulation_swap_screens">Swap Screens</string>
     <string name="emulation_rotate_upright">Rotate Screen Upright</string>
+    <string name="emulation_rotate_external_left">Rotate External Screen Left</string>
     <string name="emulation_touch_overlay_reset">Reset Overlay</string>
     <string name="emulation_show_controller_overlay">Show Controller Overlay</string>
     <string name="emulation_close_game">Close Game</string>
@@ -712,7 +718,7 @@
 
     <!-- Render 3D modes -->
     <string name="side_by_side">Side by Side</string>
-    <string name="reverse_side_by_side">Reverse Side by Side</string>
+    <string name="side_by_side_full">Side by Side Full Width</string>
     <string name="anaglyph">Anaglyph</string>
     <string name="interlaced">Interlaced</string>
     <string name="reverse_interlaced">Reverse Interlaced</string>

@@ -54,7 +54,7 @@ enum class PortraitLayoutOption : u32 {
     PortraitOriginal
 };
 
-enum class SecondaryDisplayLayout : u32 { None, TopScreenOnly, BottomScreenOnly, SideBySide };
+enum class SecondaryDisplayLayout : u32 { None, TopScreenOnly, BottomScreenOnly, SideBySide, ReversePrimary };
 /** Defines where the small screen will appear relative to the large screen
  * when in Large Screen mode
  */
@@ -72,11 +72,11 @@ enum class SmallScreenPosition : u32 {
 enum class StereoRenderOption : u32 {
     Off = 0,
     SideBySide = 1,
-    ReverseSideBySide = 2,
-    Anaglyph = 3,
-    Interlaced = 4,
-    ReverseInterlaced = 5,
-    CardboardVR = 6
+    SideBySideFull = 2,
+    Anaglyph = 4,
+    Interlaced = 5,
+    ReverseInterlaced = 6,
+    CardboardVR = 7
 };
 
 // Which eye to render when 3d is off. 800px wide mode could be added here in the future, when
@@ -520,6 +520,7 @@ struct Values {
     SwitchableSetting<LayoutOption> layout_option{LayoutOption::Default, "layout_option"};
     SwitchableSetting<bool> swap_screen{false, "swap_screen"};
     SwitchableSetting<bool> upright_screen{false, "upright_screen"};
+    SwitchableSetting<bool> upright_secondary_screen{false, "upright_secondary_screen"};
     SwitchableSetting<SecondaryDisplayLayout> secondary_display_layout{SecondaryDisplayLayout::None,
                                                                        "secondary_display_layout"};
     SwitchableSetting<float, true> large_screen_proportion{4.f, 1.f, 16.f,
@@ -561,6 +562,8 @@ struct Values {
 
     SwitchableSetting<StereoRenderOption> render_3d{StereoRenderOption::Off, "render_3d"};
     SwitchableSetting<u32> factor_3d{0, "factor_3d"};
+    SwitchableSetting<bool> swap_eyes_3d{false, "swap_eyes_3d"};
+    SwitchableSetting<bool> render_3d_secondary_only{false, "render_3d_secondary_only"};
     SwitchableSetting<MonoRenderOption> mono_render_option{MonoRenderOption::LeftEye,
                                                            "mono_render_option"};
 

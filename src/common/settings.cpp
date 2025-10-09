@@ -108,6 +108,9 @@ void LogSettings() {
     log_setting("Renderer_DisableRightEyeRender", values.disable_right_eye_render.GetValue());
     log_setting("Stereoscopy_Render3d", values.render_3d.GetValue());
     log_setting("Stereoscopy_Factor3d", values.factor_3d.GetValue());
+    log_setting("Stereoscopy_Swap_Eyes", values.swap_eyes_3d.GetValue());
+    log_setting("Stereoscopy_Render_3d_to_secondary_only",
+                values.render_3d_secondary_only.GetValue());
     log_setting("Stereoscopy_MonoRenderOption", values.mono_render_option.GetValue());
     if (values.render_3d.GetValue() == StereoRenderOption::Anaglyph) {
         log_setting("Renderer_AnaglyphShader", values.anaglyph_shader_name.GetValue());
@@ -117,6 +120,7 @@ void LogSettings() {
     log_setting("Layout_SecondaryDisplayLayout", values.secondary_display_layout.GetValue());
     log_setting("Layout_SwapScreen", values.swap_screen.GetValue());
     log_setting("Layout_UprightScreen", values.upright_screen.GetValue());
+    log_setting("Layout_UprightSecondaryScreen", values.upright_secondary_screen.GetValue());
     log_setting("Layout_ScreenGap", values.screen_gap.GetValue());
     log_setting("Layout_LargeScreenProportion", values.large_screen_proportion.GetValue());
     log_setting("Layout_SmallScreenPosition", values.small_screen_position.GetValue());
@@ -211,6 +215,7 @@ void RestoreGlobalState(bool is_powered_on) {
     values.secondary_display_layout.SetGlobal(true);
     values.swap_screen.SetGlobal(true);
     values.upright_screen.SetGlobal(true);
+    values.upright_secondary_screen.SetGlobal(true);
     values.large_screen_proportion.SetGlobal(true);
     values.screen_gap.SetGlobal(true);
     values.small_screen_position.SetGlobal(true);
@@ -218,6 +223,8 @@ void RestoreGlobalState(bool is_powered_on) {
     values.bg_green.SetGlobal(true);
     values.bg_blue.SetGlobal(true);
     values.render_3d.SetGlobal(true);
+    values.swap_eyes_3d.SetGlobal(true);
+    values.render_3d_secondary_only.SetGlobal(true);
     values.factor_3d.SetGlobal(true);
     values.filter_mode.SetGlobal(true);
     values.pp_shader_name.SetGlobal(true);

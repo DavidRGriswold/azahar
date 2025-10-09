@@ -163,6 +163,10 @@ render_3d =
 # 0 - 100: Intensity. 0 (default)
 factor_3d =
 
+# Swap Eyes in 3D
+# true or false (default)
+swap_eyes_3d =
+
 # Change Default Eye to Render When in Monoscopic Mode
 # 0 (default): Left, 1: Right
 mono_render_option =
@@ -213,6 +217,10 @@ swap_screen =
 # Toggle upright orientation, for book style games.
 # 0 (default): Off, 1: On
 upright_screen =
+
+# Toggle upright orientation on external display only.
+# 0 (default): Off, 1: On
+upright_secondary_screen =
 
 # The proportion between the large and small screens when playing in Large Screen Small Screen layout.
 # Must be a real value between 1.0 and 16.0. Default is 4

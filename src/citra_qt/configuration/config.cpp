@@ -517,12 +517,14 @@ void QtConfig::ReadLayoutValues() {
 
     ReadGlobalSetting(Settings::values.render_3d);
     ReadGlobalSetting(Settings::values.factor_3d);
+    ReadGlobalSetting(Settings::values.swap_eyes_3d);
     ReadGlobalSetting(Settings::values.filter_mode);
     ReadGlobalSetting(Settings::values.pp_shader_name);
     ReadGlobalSetting(Settings::values.anaglyph_shader_name);
     ReadGlobalSetting(Settings::values.layout_option);
     ReadGlobalSetting(Settings::values.swap_screen);
     ReadGlobalSetting(Settings::values.upright_screen);
+    ReadGlobalSetting(Settings::values.upright_secondary_screen);
     ReadGlobalSetting(Settings::values.large_screen_proportion);
     ReadGlobalSetting(Settings::values.screen_gap);
     ReadGlobalSetting(Settings::values.small_screen_position);
@@ -1082,12 +1084,14 @@ void QtConfig::SaveLayoutValues() {
 
     WriteGlobalSetting(Settings::values.render_3d);
     WriteGlobalSetting(Settings::values.factor_3d);
+    WriteGlobalSetting(Settings::values.swap_eyes_3d);
     WriteGlobalSetting(Settings::values.filter_mode);
     WriteGlobalSetting(Settings::values.pp_shader_name);
     WriteGlobalSetting(Settings::values.anaglyph_shader_name);
     WriteGlobalSetting(Settings::values.layout_option);
     WriteGlobalSetting(Settings::values.swap_screen);
     WriteGlobalSetting(Settings::values.upright_screen);
+    WriteGlobalSetting(Settings::values.upright_secondary_screen);
     WriteGlobalSetting(Settings::values.large_screen_proportion);
     WriteGlobalSetting(Settings::values.screen_gap);
     WriteGlobalSetting(Settings::values.small_screen_position);
