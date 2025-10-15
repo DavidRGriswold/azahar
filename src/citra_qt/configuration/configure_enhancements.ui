@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>440</width>
-    <height>891</height>
+    <width>639</width>
+    <height>950</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -108,6 +108,13 @@
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QCheckBox" name="use_integer_scaling">
+        <property name="text">
+         <string>Use Integer Scaling (if layout allows)</string>
+        </property>
        </widget>
       </item>
       <item>
@@ -326,13 +333,6 @@
             <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Disable Right Eye Rendering&lt;/p&gt;&lt;p&gt;Disables rendering the right eye image when not using stereoscopic mode. Greatly improves performance in some applications, but can cause flickering in others.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
           </property>
         </widget>
-      </item>
-      <item>
-       <widget class="QCheckBox" name="swap_eyes_3d">
-        <property name="text">
-         <string>Swap Eyes</string>
-        </property>
-       </widget>
       </item>
       <item>
        <widget class="QCheckBox" name="swap_eyes_3d">
