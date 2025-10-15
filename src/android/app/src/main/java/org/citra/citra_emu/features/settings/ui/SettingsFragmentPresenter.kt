@@ -14,6 +14,7 @@ import android.os.Build
 import android.text.TextUtils
 import androidx.preference.PreferenceManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlinx.serialization.builtins.IntArraySerializer
 import org.citra.citra_emu.CitraApplication
 import org.citra.citra_emu.R
 import org.citra.citra_emu.features.settings.model.AbstractBooleanSetting
@@ -24,12 +25,14 @@ import org.citra.citra_emu.features.settings.model.AbstractStringSetting
 import org.citra.citra_emu.features.settings.model.BooleanSetting
 import org.citra.citra_emu.features.settings.model.FloatSetting
 import org.citra.citra_emu.features.settings.model.IntSetting
+import org.citra.citra_emu.features.settings.model.IntListSetting
 import org.citra.citra_emu.features.settings.model.ScaledFloatSetting
 import org.citra.citra_emu.features.settings.model.Settings
 import org.citra.citra_emu.features.settings.model.StringSetting
 import org.citra.citra_emu.features.settings.model.view.DateTimeSetting
 import org.citra.citra_emu.features.settings.model.view.HeaderSetting
 import org.citra.citra_emu.features.settings.model.view.InputBindingSetting
+import org.citra.citra_emu.features.settings.model.view.MultiChoiceSetting
 import org.citra.citra_emu.features.settings.model.view.RunnableSetting
 import org.citra.citra_emu.features.settings.model.view.SettingsItem
 import org.citra.citra_emu.features.settings.model.view.SingleChoiceSetting
@@ -1125,22 +1128,16 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     IntSetting.SCREEN_LAYOUT.defaultValue
                 )
             )
+
             add(
-                SwitchSetting(
-                    BooleanSetting.UPRIGHT_SCREEN,
-                    R.string.emulation_rotate_upright,
-                    0,
-                    BooleanSetting.UPRIGHT_SCREEN.key,
-                    BooleanSetting.UPRIGHT_SCREEN.defaultValue
-                )
-            )
-            add(
-                SwitchSetting(
-                    BooleanSetting.SECONDARY_UPRIGHT_SCREEN,
-                    R.string.emulation_rotate_external_left,
-                    0,
-                    BooleanSetting.SECONDARY_UPRIGHT_SCREEN.key,
-                    BooleanSetting.SECONDARY_UPRIGHT_SCREEN.defaultValue
+                MultiChoiceSetting(
+                    IntListSetting.LAYOUTS_TO_CYCLE,
+                    R.string.layouts_to_cycle,
+                    R.string.layouts_to_cycle_description,
+                    R.array.landscapeLayouts,
+                    R.array.landscapeLayoutValues,
+                    IntListSetting.LAYOUTS_TO_CYCLE.key,
+                    IntListSetting.LAYOUTS_TO_CYCLE.defaultValue
                 )
             )
             add(
@@ -1163,6 +1160,24 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.array.secondaryLayoutValues,
                     IntSetting.SECONDARY_DISPLAY_LAYOUT.key,
                     IntSetting.SECONDARY_DISPLAY_LAYOUT.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.UPRIGHT_SCREEN,
+                    R.string.emulation_rotate_upright,
+                    0,
+                    BooleanSetting.UPRIGHT_SCREEN.key,
+                    BooleanSetting.UPRIGHT_SCREEN.defaultValue
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.SECONDARY_UPRIGHT_SCREEN,
+                    R.string.emulation_rotate_external_left,
+                    0,
+                    BooleanSetting.SECONDARY_UPRIGHT_SCREEN.key,
+                    BooleanSetting.SECONDARY_UPRIGHT_SCREEN.defaultValue
                 )
             )
             add(
