@@ -32,17 +32,18 @@ class HotkeyUtility(
         val buttonSet = InputBindingSetting.getButtonSet(keyEvent)
         val enableButton =
             PreferenceManager.getDefaultSharedPreferences(CitraApplication.appContext)
-                .getString(Settings.HOTKEY_ENABLE, "");
+                .getString(Settings.HOTKEY_ENABLE, "")
         val thisKeyIsEnableButton = buttonSet.contains(Hotkey.ENABLE.button)
-        val thisKeyIsHotkey = !thisKeyIsEnableButton && Hotkey.entries.any({ buttonSet.contains(it.button) })
+        val thisKeyIsHotkey =
+            !thisKeyIsEnableButton && Hotkey.entries.any { buttonSet.contains(it.button) }
         hotkeyIsEnabled = hotkeyIsEnabled || enableButton == "" || thisKeyIsEnableButton
 
         // Now process all internal buttons associated with this keypress
         for (button in buttonSet) {
-            currentlyPressedButtons.add(button);
+            currentlyPressedButtons.add(button)
             //option 1 - this is the enable command, which was already handled
             if (button == Hotkey.ENABLE.button) {
-                handled = true;
+                handled = true
             }
             // option 2 - this is a different hotkey command
             else if (hotkeyButtons.contains(button)) {
@@ -54,7 +55,7 @@ class HotkeyUtility(
             else {
                 // if this key press is ALSO associated with a hotkey that will process, skip
                 // the normal key event.
-                if (! thisKeyIsHotkey || ! hotkeyIsEnabled) {
+                if (!thisKeyIsHotkey || !hotkeyIsEnabled) {
                     handled = NativeLibrary.onGamePadEvent(
                         keyEvent.device.descriptor,
                         button,
@@ -63,25 +64,24 @@ class HotkeyUtility(
                 }
             }
         }
-        return handled;
+        return handled
     }
 
     fun handleKeyRelease(keyEvent: KeyEvent): Boolean {
         var handled = false
-        // a single keypress can be associated with multiple buttons
         val buttonSet = InputBindingSetting.getButtonSet(keyEvent)
-        val enableButton =
-            PreferenceManager.getDefaultSharedPreferences(CitraApplication.appContext)
-                .getString(Settings.HOTKEY_ENABLE, "");
         val thisKeyIsEnableButton = buttonSet.contains(Hotkey.ENABLE.button)
-        val thisKeyIsHotkey = !thisKeyIsEnableButton && Hotkey.entries.any({ buttonSet.contains(it.button) })
-        if (thisKeyIsEnableButton) {handled = true; hotkeyIsEnabled = false}
+        val thisKeyIsHotkey =
+            !thisKeyIsEnableButton && Hotkey.entries.any { buttonSet.contains(it.button) }
+        if (thisKeyIsEnableButton) {
+            handled = true; hotkeyIsEnabled = false
+        }
 
         for (button in buttonSet) {
             // this is a hotkey button
             if (hotkeyButtons.contains(button)) {
-                currentlyPressedButtons.remove(button);
-                if (! currentlyPressedButtons.any({hotkeyButtons.contains(it)})) {
+                currentlyPressedButtons.remove(button)
+                if (!currentlyPressedButtons.any { hotkeyButtons.contains(it) }) {
                     // all hotkeys are no longer pressed
                     hotkeyIsPressed = false
                 }
@@ -90,17 +90,20 @@ class HotkeyUtility(
                 // or if we did not register the press of this button, e.g. if this key
                 // was also a hotkey pressed after enable, but released after enable button release, then
                 // skip the normal key event
-                if ((! thisKeyIsHotkey || ! hotkeyIsEnabled) && currentlyPressedButtons.contains(button)) {
+                if ((!thisKeyIsHotkey || !hotkeyIsEnabled) && currentlyPressedButtons.contains(
+                        button
+                    )
+                ) {
                     handled = NativeLibrary.onGamePadEvent(
                         keyEvent.device.descriptor,
                         button,
                         NativeLibrary.ButtonState.RELEASED
                     ) || handled
-                    currentlyPressedButtons.remove(button);
+                    currentlyPressedButtons.remove(button)
                 }
             }
         }
-        return handled;
+        return handled
     }
 
     fun handleHotkey(bindedButton: Int): Boolean {
