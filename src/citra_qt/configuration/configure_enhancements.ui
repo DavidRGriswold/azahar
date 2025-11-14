@@ -120,7 +120,7 @@
       <item>
        <widget class="QCheckBox" name="toggle_linear_filter">
         <property name="text">
-         <string>Enable linear filtering</string>
+         <string>Enable Linear Filtering</string>
         </property>
        </widget>
       </item>
