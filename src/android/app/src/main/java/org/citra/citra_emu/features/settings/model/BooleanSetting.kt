@@ -46,7 +46,7 @@ enum class BooleanSetting(
     CPU_JIT("use_cpu_jit", Settings.SECTION_CORE, true),
     HW_SHADER("use_hw_shader", Settings.SECTION_RENDERER, true),
     SHADER_JIT("use_shader_jit", Settings.SECTION_RENDERER, true),
-    VSYNC("use_vsync_new", Settings.SECTION_RENDERER, false),
+    VSYNC("use_vsync", Settings.SECTION_RENDERER, false),
     USE_FRAME_LIMIT("use_frame_limit", Settings.SECTION_RENDERER, true),
     DEBUG_RENDERER("renderer_debug", Settings.SECTION_DEBUG, false),
     DISABLE_RIGHT_EYE_RENDER("disable_right_eye_render", Settings.SECTION_RENDERER, false),
@@ -54,7 +54,8 @@ enum class BooleanSetting(
     UPRIGHT_SCREEN("upright_screen", Settings.SECTION_LAYOUT, false),
     SECONDARY_UPRIGHT_SCREEN("upright_secondary_screen", Settings.SECTION_LAYOUT, false),
     COMPRESS_INSTALLED_CIA_CONTENT("compress_cia_installs", Settings.SECTION_STORAGE, false),
-    ANDROID_HIDE_IMAGES("android_hide_images", Settings.SECTION_CORE, false);
+    ANDROID_HIDE_IMAGES("android_hide_images", Settings.SECTION_CORE, false),
+    APPLY_REGION_FREE_PATCH("apply_region_free_patch", Settings.SECTION_SYSTEM, true);
 
     override var boolean: Boolean = defaultValue
 
@@ -89,7 +90,8 @@ enum class BooleanSetting(
             USE_ARTIC_BASE_CONTROLLER,
             COMPRESS_INSTALLED_CIA_CONTENT,
             ANDROID_HIDE_IMAGES,
-            PERF_OVERLAY_ENABLE // Works in overlay options, but not from the settings menu
+            PERF_OVERLAY_ENABLE, // Works in overlay options, but not from the settings menu
+            APPLY_REGION_FREE_PATCH
         )
 
         fun from(key: String): BooleanSetting? =

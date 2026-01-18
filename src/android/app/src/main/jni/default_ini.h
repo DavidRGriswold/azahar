@@ -136,8 +136,8 @@ texture_sampling =
 
 # Forces VSync on the display thread. Can cause input delay, so only turn this on
 # if you have screen tearing, which is unusual on Android
-# false (default): Off, true: On
-use_vsync_new =
+# 0 (default): Off, 1: On
+use_vsync =
 
 # Reduce stuttering by storing and loading generated shaders to disk
 # 0: Off, 1 (default. On)
@@ -151,10 +151,6 @@ resolution_factor =
 # Use Integer Scaling when the layout allows
 # 0: Off (default), 1: On
 use_integer_scaling =
-
-# Whether to enable V-Sync (caps the framerate at 60FPS) or not.
-# 0 (default): Off, 1: On
-vsync_enabled =
 
 # Turns on the frame limiter, which will limit frames output to the target game speed
 # 0: Off, 1: On (default)
@@ -187,7 +183,7 @@ render_3d =
 factor_3d =
 
 # Swap Eyes in 3d
-# true or false (default)
+# true: Swap eyes, false (default): Do not swap eyes
 swap_eyes_3d =
 
 # Which Display to render 3d mode to
@@ -430,6 +426,11 @@ steps_per_hour =
 # You can also set if homebrew apps are allowed to enable the plugin loader
 plugin_loader =
 allow_plugin_loader =
+
+# Apply region free patch to installed applications
+# Patches the region of installed applications to be region free, so that they always appear on the home menu.
+# 0: Disabled, 1 (default): Enabled
+apply_region_free_patch =
 
 [Camera]
 # Which camera engine to use for the right outer camera

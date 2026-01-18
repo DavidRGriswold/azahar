@@ -148,7 +148,7 @@ void SdlConfig::ReadValues() {
     ReadSetting("Renderer", Settings::values.use_integer_scaling);
     ReadSetting("Renderer", Settings::values.use_disk_shader_cache);
     ReadSetting("Renderer", Settings::values.frame_limit);
-    ReadSetting("Renderer", Settings::values.use_vsync_new);
+    ReadSetting("Renderer", Settings::values.use_vsync);
     ReadSetting("Renderer", Settings::values.texture_filter);
     ReadSetting("Renderer", Settings::values.texture_sampling);
     ReadSetting("Renderer", Settings::values.delay_game_render_thread_us);
@@ -258,6 +258,7 @@ void SdlConfig::ReadValues() {
     ReadSetting("System", Settings::values.plugin_loader_enabled);
     ReadSetting("System", Settings::values.allow_plugin_loader);
     ReadSetting("System", Settings::values.steps_per_hour);
+    ReadSetting("System", Settings::values.apply_region_free_patch);
 
     {
         constexpr const char* default_init_time_offset = "0 00:00:00";

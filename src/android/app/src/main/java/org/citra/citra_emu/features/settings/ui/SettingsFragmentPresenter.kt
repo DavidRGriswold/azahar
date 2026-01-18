@@ -17,6 +17,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.serialization.builtins.IntArraySerializer
 import org.citra.citra_emu.CitraApplication
 import org.citra.citra_emu.R
+import org.citra.citra_emu.display.ScreenLayout
+import org.citra.citra_emu.display.StereoMode
+import org.citra.citra_emu.display.StereoWhichDisplay
 import org.citra.citra_emu.features.settings.model.AbstractBooleanSetting
 import org.citra.citra_emu.features.settings.model.AbstractIntSetting
 import org.citra.citra_emu.features.settings.model.AbstractSetting
@@ -114,20 +117,24 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
     }
 
     /** Returns the portrait mode width */
-    private fun getWidth(): Int {
-        val dm = Resources.getSystem().displayMetrics;
-        return if (dm.widthPixels < dm.heightPixels)
-            dm.widthPixels
-        else
-            dm.heightPixels
+    private fun getDimensions(): IntArray {
+        val dm = Resources.getSystem().displayMetrics
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val wm = settingsActivity.windowManager.maximumWindowMetrics
+            val height = wm.bounds.height().coerceAtLeast(dm.heightPixels)
+            val width = wm.bounds.width().coerceAtLeast(dm.widthPixels)
+            intArrayOf(width, height)
+        } else {
+            intArrayOf(dm.widthPixels, dm.heightPixels)
+        }
     }
 
-    private fun getHeight(): Int {
-        val dm = Resources.getSystem().displayMetrics;
-        return if (dm.widthPixels < dm.heightPixels)
-            dm.heightPixels
-        else
-            dm.widthPixels
+    private fun getSmallerDimension(): Int {
+        return getDimensions().min()
+    }
+
+    private fun getLargerDimension(): Int {
+        return getDimensions().max()
     }
 
     private fun addConfigSettings(sl: ArrayList<SettingsItem>) {
@@ -355,6 +362,15 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     0,
                     R.array.regionNames,
                     R.array.regionValues,
+                )
+            )
+            add(
+                SwitchSetting(
+                    BooleanSetting.APPLY_REGION_FREE_PATCH,
+                    R.string.apply_region_free_patch,
+                    R.string.apply_region_free_patch_desc,
+                    BooleanSetting.APPLY_REGION_FREE_PATCH.key,
+                    BooleanSetting.APPLY_REGION_FREE_PATCH.defaultValue
                 )
             )
             val systemCountrySetting = object : AbstractShortSetting {
@@ -952,6 +968,18 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     IntSetting.RENDER_3D_WHICH_DISPLAY.defaultValue
                 )
             )
+            add(
+                SingleChoiceSetting(
+                    IntSetting.STEREOSCOPIC_3D_MODE,
+                    R.string.render3d,
+                    R.string.render3d_description,
+                    R.array.render3dModes,
+                    R.array.render3dValues,
+                    IntSetting.STEREOSCOPIC_3D_MODE.key,
+                    IntSetting.STEREOSCOPIC_3D_MODE.defaultValue,
+                    isEnabled = IntSetting.RENDER_3D_WHICH_DISPLAY.int != StereoWhichDisplay.NONE.int
+                )
+            )
 
             add(
                 SliderSetting(
@@ -981,7 +1009,8 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.swap_eyes_3d,
                     R.string.swap_eyes_3d_description,
                     BooleanSetting.SWAP_EYES_3D.key,
-                    BooleanSetting.SWAP_EYES_3D.defaultValue
+                    BooleanSetting.SWAP_EYES_3D.defaultValue,
+                    isEnabled = IntSetting.RENDER_3D_WHICH_DISPLAY.int != StereoWhichDisplay.NONE.int
                 )
             )
 
@@ -995,7 +1024,8 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     100,
                     "%",
                     IntSetting.CARDBOARD_SCREEN_SIZE.key,
-                    IntSetting.CARDBOARD_SCREEN_SIZE.defaultValue.toFloat()
+                    IntSetting.CARDBOARD_SCREEN_SIZE.defaultValue.toFloat(),
+                    isEnabled = IntSetting.STEREOSCOPIC_3D_MODE.int == StereoMode.CARDBOARD_VR.int
                 )
             )
             add(
@@ -1007,7 +1037,8 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     100,
                     "%",
                     IntSetting.CARDBOARD_X_SHIFT.key,
-                    IntSetting.CARDBOARD_X_SHIFT.defaultValue.toFloat()
+                    IntSetting.CARDBOARD_X_SHIFT.defaultValue.toFloat(),
+                    isEnabled = IntSetting.STEREOSCOPIC_3D_MODE.int == StereoMode.CARDBOARD_VR.int
                 )
             )
             add(
@@ -1019,7 +1050,8 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     100,
                     "%",
                     IntSetting.CARDBOARD_Y_SHIFT.key,
-                    IntSetting.CARDBOARD_Y_SHIFT.defaultValue.toFloat()
+                    IntSetting.CARDBOARD_Y_SHIFT.defaultValue.toFloat(),
+                    isEnabled = IntSetting.STEREOSCOPIC_3D_MODE.int == StereoMode.CARDBOARD_VR.int
                 )
             )
 
@@ -1174,7 +1206,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.array.aspectRatioValues,
                     IntSetting.ASPECT_RATIO.key,
                     IntSetting.ASPECT_RATIO.defaultValue,
-                    isEnabled = IntSetting.SCREEN_LAYOUT.int == 1,
+                    isEnabled = IntSetting.SCREEN_LAYOUT.int == ScreenLayout.SINGLE_SCREEN.int,
                 )
             )
             add(
@@ -1222,7 +1254,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     "%",
                     FloatSetting.SECOND_SCREEN_OPACITY.key,
                     FloatSetting.SECOND_SCREEN_OPACITY.defaultValue,
-                    isEnabled = IntSetting.SCREEN_LAYOUT.int == 5
+                    isEnabled = IntSetting.SCREEN_LAYOUT.int == ScreenLayout.CUSTOM_LAYOUT.int
                 )
             )
             add(HeaderSetting(R.string.bg_color, R.string.bg_color_description))
@@ -1433,7 +1465,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_x,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_TOP_X.key,
                     IntSetting.LANDSCAPE_TOP_X.defaultValue.toFloat()
@@ -1445,7 +1477,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_y,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_TOP_Y.key,
                     IntSetting.LANDSCAPE_TOP_Y.defaultValue.toFloat()
@@ -1457,7 +1489,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_width,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_TOP_WIDTH.key,
                     IntSetting.LANDSCAPE_TOP_WIDTH.defaultValue.toFloat()
@@ -1469,7 +1501,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_height,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_TOP_HEIGHT.key,
                     IntSetting.LANDSCAPE_TOP_HEIGHT.defaultValue.toFloat()
@@ -1482,7 +1514,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_x,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_BOTTOM_X.key,
                     IntSetting.LANDSCAPE_BOTTOM_X.defaultValue.toFloat()
@@ -1494,7 +1526,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_y,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_BOTTOM_Y.key,
                     IntSetting.LANDSCAPE_BOTTOM_Y.defaultValue.toFloat()
@@ -1506,7 +1538,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_width,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_BOTTOM_WIDTH.key,
                     IntSetting.LANDSCAPE_BOTTOM_WIDTH.defaultValue.toFloat()
@@ -1518,7 +1550,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_height,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.LANDSCAPE_BOTTOM_HEIGHT.key,
                     IntSetting.LANDSCAPE_BOTTOM_HEIGHT.defaultValue.toFloat()
@@ -1538,7 +1570,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_x,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.PORTRAIT_TOP_X.key,
                     IntSetting.PORTRAIT_TOP_X.defaultValue.toFloat()
@@ -1550,7 +1582,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_y,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.PORTRAIT_TOP_Y.key,
                     IntSetting.PORTRAIT_TOP_Y.defaultValue.toFloat()
@@ -1562,7 +1594,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_width,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.PORTRAIT_TOP_WIDTH.key,
                     IntSetting.PORTRAIT_TOP_WIDTH.defaultValue.toFloat()
@@ -1574,7 +1606,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_height,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.PORTRAIT_TOP_HEIGHT.key,
                     IntSetting.PORTRAIT_TOP_HEIGHT.defaultValue.toFloat()
@@ -1587,7 +1619,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_x,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.PORTRAIT_BOTTOM_X.key,
                     IntSetting.PORTRAIT_BOTTOM_X.defaultValue.toFloat()
@@ -1599,7 +1631,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_y,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.PORTRAIT_BOTTOM_Y.key,
                     IntSetting.PORTRAIT_BOTTOM_Y.defaultValue.toFloat()
@@ -1611,7 +1643,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_width,
                     0,
                     0,
-                    getWidth(),
+                    getSmallerDimension(),
                     "px",
                     IntSetting.PORTRAIT_BOTTOM_WIDTH.key,
                     IntSetting.PORTRAIT_BOTTOM_WIDTH.defaultValue.toFloat()
@@ -1623,7 +1655,7 @@ class SettingsFragmentPresenter(private val fragmentView: SettingsFragmentView) 
                     R.string.emulation_custom_layout_height,
                     0,
                     0,
-                    getHeight(),
+                    getLargerDimension(),
                     "px",
                     IntSetting.PORTRAIT_BOTTOM_HEIGHT.key,
                     IntSetting.PORTRAIT_BOTTOM_HEIGHT.defaultValue.toFloat()

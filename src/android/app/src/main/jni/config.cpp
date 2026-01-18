@@ -147,7 +147,7 @@ void Config::ReadValues() {
     ReadSetting("Renderer", Settings::values.use_shader_jit);
     ReadSetting("Renderer", Settings::values.resolution_factor);
     ReadSetting("Renderer", Settings::values.use_disk_shader_cache);
-    ReadSetting("Renderer", Settings::values.use_vsync_new);
+    ReadSetting("Renderer", Settings::values.use_vsync);
     ReadSetting("Renderer", Settings::values.texture_filter);
     ReadSetting("Renderer", Settings::values.texture_sampling);
     ReadSetting("Renderer", Settings::values.turbo_limit);
@@ -265,6 +265,7 @@ void Config::ReadValues() {
     ReadSetting("System", Settings::values.plugin_loader_enabled);
     ReadSetting("System", Settings::values.allow_plugin_loader);
     ReadSetting("System", Settings::values.steps_per_hour);
+    ReadSetting("System", Settings::values.apply_region_free_patch);
 
     // Camera
     using namespace Service::CAM;
