@@ -2556,6 +2556,25 @@ void GMainWindow::OnLoadComplete() {
     UpdateSecondaryWindowVisibility();
 }
 
+// Static helper functions used to handle different fullscreen behavior on windows
+// to avoid issues with exclusive fullscreen
+static void GoFullscreen(QWidget* window) {
+#ifdef Q_OS_WIN
+    window->setWindowFlags(window->windowFlags() | Qt::FramelessWindowHint);
+    window->setGeometry(window->screen()->geometry());
+    window->showNormal();
+#else
+    window->showFullScreen();
+#endif
+}
+
+static void StopFullscreen(QWidget* window) {
+#ifdef Q_OS_WIN
+    window->setWindowFlags(window->windowFlags() & ~Qt::FramelessWindowHint);
+#endif
+    window->showNormal();
+}
+
 void GMainWindow::ToggleFullscreen() {
     if (!emulation_running) {
         return;
@@ -2571,10 +2590,12 @@ void GMainWindow::ToggleSecondaryFullscreen() {
     if (!emulation_running) {
         return;
     }
-    if (secondary_window->isFullScreen()) {
-        secondary_window->showNormal();
+    if (secondary_window_is_fullscreen) {
+        StopFullscreen(secondary_window);
+        secondary_window_is_fullscreen = true;
     } else {
-        secondary_window->showFullScreen();
+        GoFullscreen(secondary_window);
+        secondary_window_is_fullscreen = false;
     }
 }
 
@@ -2583,23 +2604,26 @@ void GMainWindow::ShowFullscreen() {
         UISettings::values.geometry = saveGeometry();
         ui->menubar->hide();
         statusBar()->hide();
-        showFullScreen();
+        GoFullscreen(this);
     } else {
         UISettings::values.renderwindow_geometry = render_window->saveGeometry();
-        render_window->showFullScreen();
+        GoFullscreen(render_window);
     }
+    main_window_is_fullscreen = true;
 }
 
 void GMainWindow::HideFullscreen() {
     if (ui->action_Single_Window_Mode->isChecked()) {
         statusBar()->setVisible(ui->action_Show_Status_Bar->isChecked());
         ui->menubar->show();
+        StopFullscreen(this);
         showNormal();
         restoreGeometry(UISettings::values.geometry);
     } else {
-        render_window->showNormal();
+        StopFullscreen(render_window);
         render_window->restoreGeometry(UISettings::values.renderwindow_geometry);
     }
+    main_window_is_fullscreen = false;
 }
 
 void GMainWindow::ToggleWindowMode() {

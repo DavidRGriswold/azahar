@@ -227,6 +227,8 @@ private:
 
     void ShowCommandOutput(std::string title, std::string message);
     void ShowFFmpegErrorMessage();
+    bool main_window_is_fullscreen = false;
+    bool secondary_window_is_fullscreen = false;
 
 private slots:
     void OnStartGame();
