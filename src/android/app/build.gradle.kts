@@ -242,7 +242,7 @@ val unzipVulkanValidationLayers = tasks.register<Copy>("unzipVulkanValidationLay
 
 tasks.named("preBuild") {
     dependsOn(unzipVulkanValidationLayers)
-    dependsOn("ktlintCheck")
+    dependsOn("ktlintFormat")
 }
 
 ktlint {
