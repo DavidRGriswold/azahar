@@ -72,6 +72,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
     DialogInterface.OnClickListener,
     DialogInterface.OnMultiChoiceClickListener {
     private var settings: ArrayList<SettingsItem>? = null
+    var isPerGame: Boolean = false
     private var clickedItem: SettingsItem? = null
     private var clickedPosition: Int
     private var dialog: AlertDialog? = null
@@ -227,6 +228,8 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
             // Reload the settings list to update the UI
             fragmentView.loadSettingsList()
         }
+
+        notifyItemChanged(position)
     }
 
     private fun onSingleChoiceClick(item: SingleChoiceSetting) {
@@ -542,10 +545,19 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
     }
 
     fun onLongClick(setting: AbstractSetting<*>, position: Int): Boolean {
+        val systemSettings = fragmentView.activityView?.settings
+        val resetGlobal = systemSettings != null && systemSettings.isPerGame()
+
         MaterialAlertDialogBuilder(context)
-            .setMessage(R.string.reset_setting_confirmation)
+            .setMessage(
+                if (resetGlobal) R.string.reset_setting_global_confirmation else R.string.reset_setting_confirmation
+            )
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                resetSettingToDefault(setting, position)
+                if (resetGlobal) {
+                    resetSettingToGlobal(setting, position)
+                } else {
+                    resetSettingToDefault(setting, position)
+                }
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
@@ -554,7 +566,16 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
     }
 
     fun <T> resetSettingToDefault(setting: AbstractSetting<T>, position: Int) {
-        fragmentView.activityView?.settings?.set(setting, setting.defaultValue)
+        val settings = fragmentView.activityView?.settings ?: return
+        settings.set(setting, setting.defaultValue)
+        notifyItemChanged(position)
+        fragmentView.onSettingChanged()
+        fragmentView.loadSettingsList()
+    }
+
+    fun <T> resetSettingToGlobal(setting: AbstractSetting<T>, position: Int) {
+        val settings = fragmentView.activityView?.settings ?: return
+        settings.clearOverride(setting)
         notifyItemChanged(position)
         fragmentView.onSettingChanged()
         fragmentView.loadSettingsList()

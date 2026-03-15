@@ -289,6 +289,7 @@ class MainActivity :
     fun finishSetup(navController: NavController) {
         navController.navigate(R.id.action_firstTimeSetupFragment_to_gamesFragment)
         (binding.navigationView as NavigationBarView).setupWithNavController(navController)
+        SettingsFile.loadSettings(Settings.settings)
     }
 
     private fun setUpNavigation(savedInstanceState: Bundle?, navController: NavController) {

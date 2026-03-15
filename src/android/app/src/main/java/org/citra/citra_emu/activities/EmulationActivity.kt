@@ -105,6 +105,17 @@ class EmulationActivity : AppCompatActivity() {
         RefreshRateUtil.enforceRefreshRate(this, sixtyHz = true)
 
         ThemeUtil.setTheme(this)
+        val game = try {
+            intent.extras?.let { extras ->
+                BundleCompat.getParcelable(extras, "game", Game::class.java)
+            } ?: run {
+                Log.error("[EmulationActivity] Missing game data in intent extras")
+                return
+            }
+        } catch (e: Exception) {
+            Log.error("[EmulationActivity] Failed to retrieve game data: ${e.message}")
+            return
+        }
 
         if (!ensureUserDirectoryReady()) {
             super.onCreate(null) // null: don't restore fragments into an activity we're killing
@@ -125,13 +136,14 @@ class EmulationActivity : AppCompatActivity() {
         isRotationBlocked = true
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LOCKED
 
-        super.onCreate(savedInstanceState)
-
         // load global settings if for some reason they aren't (should be loaded in MainActivity)
         if (Settings.settings.getAllGlobal().isEmpty()) {
             SettingsFile.loadSettings(Settings.settings)
         }
-        // once per-game settings are added, load them here!
+        // load per-game settings
+        SettingsFile.loadSettings(Settings.settings, String.format("%016X", game.titleId))
+
+        super.onCreate(savedInstanceState)
 
         secondaryDisplayManager = SecondaryDisplay(this, Settings.settings)
         secondaryDisplayManager.updateDisplay()
@@ -163,17 +175,7 @@ class EmulationActivity : AppCompatActivity() {
         isEmulationRunning = true
         instance = this
 
-        val game = try {
-            intent.extras?.let { extras ->
-                BundleCompat.getParcelable(extras, "game", Game::class.java)
-            } ?: run {
-                Log.error("[EmulationActivity] Missing game data in intent extras")
-                return
-            }
-        } catch (e: Exception) {
-            Log.error("[EmulationActivity] Failed to retrieve game data: ${e.message}")
-            return
-        }
+        applyOrientationSettings() // Check for orientation settings at startup
 
         NativeLibrary.playTimeManagerStart(game.titleId)
     }
