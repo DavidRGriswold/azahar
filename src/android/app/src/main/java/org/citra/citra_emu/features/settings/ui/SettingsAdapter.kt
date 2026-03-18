@@ -41,6 +41,7 @@ import org.citra.citra_emu.databinding.ListItemSettingSwitchBinding
 import org.citra.citra_emu.databinding.ListItemSettingsHeaderBinding
 import org.citra.citra_emu.features.settings.model.AbstractSetting
 import org.citra.citra_emu.features.settings.model.FloatSetting
+import org.citra.citra_emu.features.settings.model.InputMappingSetting
 import org.citra.citra_emu.features.settings.model.view.DateTimeSetting
 import org.citra.citra_emu.features.settings.model.view.InputBindingSetting
 import org.citra.citra_emu.features.settings.model.view.MultiChoiceSetting
@@ -269,7 +270,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
 
     private fun onStringSingleChoiceClick(item: StringSingleChoiceSetting) {
         clickedItem = item
-        dialog = context?.let {
+        dialog = context.let {
             MaterialAlertDialogBuilder(it)
                 .setTitle(item.nameId)
                 .setSingleChoiceItems(item.choices, item.selectValueIndex, this)
@@ -590,20 +591,8 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
         fragmentView.loadSettingsList()
     }
 
-    fun onInputBindingLongClick(setting: InputBindingSetting, position: Int): Boolean {
-        MaterialAlertDialogBuilder(context)
-            .setMessage(R.string.reset_setting_confirmation)
-            .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                setting.removeOldMapping()
-                notifyItemChanged(position)
-                fragmentView.onSettingChanged()
-                fragmentView.loadSettingsList()
-            }
-            .setNegativeButton(android.R.string.cancel, null)
-            .show()
-
-        return true
-    }
+    fun <T> onInputBindingLongClick(setting: AbstractSetting<T>, position: Int): Boolean =
+        onLongClick(setting, position)
 
     fun onClickDisabledSetting(isRuntimeDisabled: Boolean, @StringRes disabledMessage: Int) {
         val titleId = if (isRuntimeDisabled) {
@@ -632,11 +621,14 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
     }
 
     fun onLongClickAutoMap(): Boolean {
+        val settings = fragmentView.activityView?.editingSettings ?: return false
         showConfirmationDialog(
             R.string.controller_clear_all,
             R.string.controller_clear_all_confirm
         ) {
-            InputBindingSetting.clearAllBindings()
+            for (key in InputMappingSetting.entries) {
+                settings.setBySettingsContext(key, null)
+            }
             fragmentView.loadSettingsList()
             fragmentView.onSettingChanged()
         }
