@@ -15,8 +15,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.citra.citra_emu.R
 import org.citra.citra_emu.databinding.DialogAutoMapBinding
-import org.citra.citra_emu.features.settings.model.view.InputBindingSetting
 import org.citra.citra_emu.utils.Log
+import org.citra.citra_emu.features.input.GamepadHelper
+import org.citra.citra_emu.features.settings.model.Settings
 
 /**
  * Captures a single button press to detect controller layout (Xbox vs Nintendo)
@@ -72,12 +73,12 @@ class AutoMapDialogFragment : BottomSheetDialogFragment() {
         // Check if this is a Nintendo Switch Joy-Con (not Pro Controller).
         // Joy-Cons have unique quirks: split devices, non-standard D-pad scan codes,
         // partial A/B swap but no X/Y swap from Android's evdev layer.
-        val isJoyCon = InputBindingSetting.isJoyCon(device)
+        val isJoyCon = GamepadHelper.isJoyCon(device)
 
         if (isJoyCon) {
             Log.info("[AutoMap] Detected Joy-Con - using Joy-Con mappings")
-            InputBindingSetting.clearAllBindings()
-            InputBindingSetting.applyJoyConBindings()
+            GamepadHelper.clearAllBindings(Settings.settings)
+            GamepadHelper.applyJoyConBindings(Settings.settings)
             onComplete?.invoke()
             dismiss()
             return true
@@ -106,8 +107,7 @@ class AutoMapDialogFragment : BottomSheetDialogFragment() {
         val dpadName = if (useAxisDpad) "axis" else "button"
         Log.info("[AutoMap] Detected $dpadName d-pad (device=${device?.name})")
 
-        InputBindingSetting.clearAllBindings()
-        InputBindingSetting.applyAutoMapBindings(isNintendoLayout, useAxisDpad)
+        GamepadHelper.applyAutoMapBindings(Settings.settings, isNintendoLayout, useAxisDpad)
 
         onComplete?.invoke()
         dismiss()
