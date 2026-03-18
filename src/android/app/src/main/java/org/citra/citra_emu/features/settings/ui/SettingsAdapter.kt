@@ -269,7 +269,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
 
     private fun onStringSingleChoiceClick(item: StringSingleChoiceSetting) {
         clickedItem = item
-        dialog = context?.let {
+        dialog = context.let {
             MaterialAlertDialogBuilder(it)
                 .setTitle(item.nameId)
                 .setSingleChoiceItems(item.choices, item.selectValueIndex, this)
@@ -469,7 +469,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 val scSetting = clickedItem as? SingleChoiceSetting
                 scSetting?.let {
                     val value = getValueForSingleChoiceSelection(it, which)
-                    if (it.selectedValue != value) fragmentView?.onSettingChanged()
+                    if (it.selectedValue != value) fragmentView.onSettingChanged()
                     it.setSelectedValue(value)
                     fragmentView.loadSettingsList()
                     closeDialog()
@@ -480,7 +480,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 val scSetting = clickedItem as? StringSingleChoiceSetting
                 scSetting?.let {
                     val value = it.getValueAt(which) ?: ""
-                    if (it.selectedValue != value) fragmentView?.onSettingChanged()
+                    if (it.selectedValue != value) fragmentView.onSettingChanged()
                     it.setSelectedValue(value)
                     fragmentView.loadSettingsList()
                     closeDialog()
@@ -492,7 +492,6 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 sliderSetting?.let {
                     val sliderval = it.roundedFloat(sliderProgress)
                     if (sliderval != it.selectedFloat) fragmentView.onSettingChanged()
-                    val s = it.setting
                     when {
                         it.setting?.defaultValue is Int -> it.setSelectedValue(
                             sliderProgress.roundToInt()
@@ -509,7 +508,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 val inputSetting = clickedItem as? StringInputSetting
                 inputSetting?.let {
                     if (it.selectedValue != textInputValue) {
-                        fragmentView?.onSettingChanged()
+                        fragmentView.onSettingChanged()
                     }
                     it.setSelectedValue(textInputValue)
                     fragmentView.loadSettingsList()
@@ -614,11 +613,12 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
     }
 
     fun onLongClickAutoMap(): Boolean {
+        val settings = fragmentView.activityView?.settings ?: return false
         showConfirmationDialog(
             R.string.controller_clear_all,
             R.string.controller_clear_all_confirm
         ) {
-            InputBindingSetting.clearAllBindings()
+            settings.inputMappingManager.clear()
             fragmentView.loadSettingsList()
             fragmentView.onSettingChanged()
         }
