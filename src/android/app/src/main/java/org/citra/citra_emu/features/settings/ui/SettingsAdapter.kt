@@ -269,7 +269,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
 
     private fun onStringSingleChoiceClick(item: StringSingleChoiceSetting) {
         clickedItem = item
-        dialog = context?.let {
+        dialog = context.let {
             MaterialAlertDialogBuilder(it)
                 .setTitle(item.nameId)
                 .setSingleChoiceItems(item.choices, item.selectValueIndex, this)
@@ -469,7 +469,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 val scSetting = clickedItem as? SingleChoiceSetting
                 scSetting?.let {
                     val value = getValueForSingleChoiceSelection(it, which)
-                    if (it.selectedValue != value) fragmentView?.onSettingChanged()
+                    if (it.selectedValue != value) fragmentView.onSettingChanged()
                     it.setSelectedValue(value)
                     fragmentView.loadSettingsList()
                     closeDialog()
@@ -480,7 +480,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 val scSetting = clickedItem as? StringSingleChoiceSetting
                 scSetting?.let {
                     val value = it.getValueAt(which) ?: ""
-                    if (it.selectedValue != value) fragmentView?.onSettingChanged()
+                    if (it.selectedValue != value) fragmentView.onSettingChanged()
                     it.setSelectedValue(value)
                     fragmentView.loadSettingsList()
                     closeDialog()
@@ -492,7 +492,6 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 sliderSetting?.let {
                     val sliderval = it.roundedFloat(sliderProgress)
                     if (sliderval != it.selectedFloat) fragmentView.onSettingChanged()
-                    val s = it.setting
                     when {
                         it.setting?.defaultValue is Int -> it.setSelectedValue(
                             sliderProgress.roundToInt()
@@ -509,7 +508,7 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
                 val inputSetting = clickedItem as? StringInputSetting
                 inputSetting?.let {
                     if (it.selectedValue != textInputValue) {
-                        fragmentView?.onSettingChanged()
+                        fragmentView.onSettingChanged()
                     }
                     it.setSelectedValue(textInputValue)
                     fragmentView.loadSettingsList()
@@ -550,7 +549,11 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
 
         MaterialAlertDialogBuilder(context)
             .setMessage(
-                if (resetGlobal) R.string.reset_setting_global_confirmation else R.string.reset_setting_confirmation
+                if (resetGlobal) {
+                    R.string.reset_setting_global_confirmation
+                } else {
+                    R.string.reset_setting_confirmation
+                }
             )
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                 if (resetGlobal) {
@@ -581,14 +584,23 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
         fragmentView.loadSettingsList()
     }
 
-    fun onInputBindingLongClick(setting: InputBindingSetting, position: Int): Boolean {
+    fun <T> onInputBindingLongClick(setting: AbstractSetting<T>, position: Int): Boolean {
+        val systemSettings = fragmentView.activityView?.settings
+        val resetGlobal = systemSettings != null && systemSettings.isPerGame()
         MaterialAlertDialogBuilder(context)
-            .setMessage(R.string.reset_setting_confirmation)
+            .setMessage(
+                if (resetGlobal) {
+                    R.string.reset_setting_global_confirmation
+                } else {
+                    R.string.reset_setting_confirmation
+                }
+            )
             .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                setting.removeOldMapping()
-                notifyItemChanged(position)
-                fragmentView.onSettingChanged()
-                fragmentView.loadSettingsList()
+                if (resetGlobal) {
+                    resetSettingToGlobal(setting, position)
+                } else {
+                    resetSettingToDefault(setting, position)
+                }
             }
             .setNegativeButton(android.R.string.cancel, null)
             .show()
@@ -623,11 +635,12 @@ class SettingsAdapter(val fragmentView: SettingsFragmentView, val context: Conte
     }
 
     fun onLongClickAutoMap(): Boolean {
+        val settings = fragmentView.activityView?.settings ?: return false
         showConfirmationDialog(
             R.string.controller_clear_all,
             R.string.controller_clear_all_confirm
         ) {
-            InputBindingSetting.clearAllBindings()
+            settings.inputMappingManager.clear()
             fragmentView.loadSettingsList()
             fragmentView.onSettingChanged()
         }
