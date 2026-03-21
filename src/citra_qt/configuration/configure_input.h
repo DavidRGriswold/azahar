@@ -1,4 +1,4 @@
-// Copyright Citra Emulator Project / Lime3DS Emulator Project
+// Copyright Citra Emulator Project / Azahar Emulator Project
 // Licensed under GPLv2 or any later version
 // Refer to the license.txt file included.
 
@@ -49,6 +49,7 @@ public:
 
     /// Save the current input profile index
     void ApplyProfile();
+
 public slots:
     void OnHotkeysChanged(QMap<QKeySequence, ConfigureInput::InputBinding> new_key_list);
     void OnClearBinding(ConfigureInput::InputBinding binding);
