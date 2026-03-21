@@ -70,6 +70,7 @@ class Settings {
 
         if (gameId != other.gameId) return
 
+        perGameOverrides.clear()
         other.perGameOverrides.forEach{ (key, value) ->
             perGameOverrides[key] = value
         }

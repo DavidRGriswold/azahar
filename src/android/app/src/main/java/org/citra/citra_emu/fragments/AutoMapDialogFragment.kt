@@ -11,13 +11,14 @@ import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.citra.citra_emu.R
 import org.citra.citra_emu.databinding.DialogAutoMapBinding
 import org.citra.citra_emu.utils.Log
 import org.citra.citra_emu.features.input.GamepadHelper
-import org.citra.citra_emu.features.settings.model.Settings
+import org.citra.citra_emu.features.settings.model.SettingsViewModel
 
 /**
  * Captures a single button press to detect controller layout (Xbox vs Nintendo)
@@ -26,7 +27,7 @@ import org.citra.citra_emu.features.settings.model.Settings
 class AutoMapDialogFragment : BottomSheetDialogFragment() {
     private var _binding: DialogAutoMapBinding? = null
     private val binding get() = _binding!!
-
+    private val settingsViewModel: SettingsViewModel by activityViewModels()
     private var onComplete: (() -> Unit)? = null
 
     override fun onCreateView(
@@ -77,8 +78,7 @@ class AutoMapDialogFragment : BottomSheetDialogFragment() {
 
         if (isJoyCon) {
             Log.info("[AutoMap] Detected Joy-Con - using Joy-Con mappings")
-            GamepadHelper.clearAllBindings(Settings.settings)
-            GamepadHelper.applyJoyConBindings(Settings.settings)
+            GamepadHelper.applyJoyConBindings(settingsViewModel.settings)
             onComplete?.invoke()
             dismiss()
             return true
@@ -107,7 +107,7 @@ class AutoMapDialogFragment : BottomSheetDialogFragment() {
         val dpadName = if (useAxisDpad) "axis" else "button"
         Log.info("[AutoMap] Detected $dpadName d-pad (device=${device?.name})")
 
-        GamepadHelper.applyAutoMapBindings(Settings.settings, isNintendoLayout, useAxisDpad)
+        GamepadHelper.applyAutoMapBindings(settingsViewModel.settings, isNintendoLayout, useAxisDpad)
 
         onComplete?.invoke()
         dismiss()
