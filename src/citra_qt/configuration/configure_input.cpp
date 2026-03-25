@@ -530,6 +530,25 @@ void ConfigureInput::ClearBinding(InputBinding binding) {
     ApplyConfiguration();
 }
 
+void ConfigureInput::ClearBinding(InputBinding binding) {
+    if (binding.binding_type == "NativeButton") {
+        buttons_param[binding.index].Clear();
+        button_map[binding.index]->setText(tr("[not set]"));
+    } else if (binding.binding_type == "AnalogButton") {
+        const auto analog_id = binding.index;
+        const auto sub_button_id = binding.sub_index;
+        analogs_param[analog_id].Erase(analog_sub_buttons[sub_button_id]);
+        analog_map_buttons[analog_id][sub_button_id]->setText(tr("[not set]"));
+    } else if (binding.binding_type == "Analog") {
+        const auto analog_id = binding.index;
+        analogs_param[analog_id].Clear();
+        UpdateButtonLabels();
+    } else if (binding.binding_type == "Hotkey") {
+        emit ClearHotkey(binding);
+    }
+    ApplyConfiguration();
+}
+
 void ConfigureInput::ClearAll() {
     for (int button_id = 0; button_id < Settings::NativeButton::NumButtons; button_id++) {
         if (button_map[button_id] && button_map[button_id]->isEnabled())

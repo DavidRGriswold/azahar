@@ -264,9 +264,9 @@ void ConfigureHotkeys::RestoreHotkey(QModelIndex index) {
     const auto [key_sequence_used, used_action] = IsUsedKey(default_key_sequence);
 
     if (key_sequence_used && default_key_sequence != QKeySequence(model->data(index).toString())) {
-        QMessageBox::warning(
-            this, tr("Conflicting Key Sequence"),
-            tr("The default key sequence is already assigned to: %1").arg(used_action.name));
+        QMessageBox::warning(this, tr("Conflicting Key Sequence"),
+                             tr("The default key sequence is already assigned to: %1")
+                                 .arg(QString::fromStdString(used_action.name)));
     } else {
         model->setData(index, default_key_sequence.toString(QKeySequence::NativeText));
     }
