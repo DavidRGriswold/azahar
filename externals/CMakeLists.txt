@@ -211,9 +211,16 @@ endif()
 set(BUILD_TESTING OFF CACHE BOOL "")
 add_subdirectory(teakra EXCLUDE_FROM_ALL)
 
-# SDL2
+# SDL2 is now using sdl3 + sdl2compat
 if (ENABLE_SDL2 AND NOT USE_SYSTEM_SDL2)
-    add_subdirectory(sdl2 EXCLUDE_FROM_ALL)
+    # # SDL3 (required by SDL2compat)
+    set(SDL_SHARED ON CACHE BOOL "" FORCE)
+    set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+    add_subdirectory(sdl3)
+
+    # SDL2compat on top of SDL3
+    set(SDL2COMPAT_VENDORED OFF CACHE BOOL "" FORCE)
+    add_subdirectory(sdl2-compat)
 endif()
 
 # libusb
