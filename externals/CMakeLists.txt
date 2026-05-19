@@ -216,6 +216,17 @@ if (ENABLE_SDL2 AND NOT USE_SYSTEM_SDL2)
     # # SDL3 (required by SDL2compat)
     set(SDL_SHARED ON CACHE BOOL "" FORCE)
     set(SDL_STATIC OFF CACHE BOOL "" FORCE)
+    # disable X11 testing to stop build errors on linux
+        set(SDL_X11_XTEST OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XCURSOR OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XDBE OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XFIXES OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XINPUT OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XRANDR OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XSCRNSAVER OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XSHAPE OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XSYNC OFF CACHE BOOL "" FORCE)
+    
     add_subdirectory(sdl3)
 
     # SDL2compat on top of SDL3
