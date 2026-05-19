@@ -18,6 +18,7 @@ set(BUILD_SHARED_LIBS OFF)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/externals/cmake-modules")
+
 include(DownloadExternals)
 include(CMakeDependentOption)
 
@@ -537,13 +538,12 @@ if (NOT USE_SYSTEM_BOOST)
     add_library(Boost::iostreams ALIAS boost_iostreams)
 endif()
 
-# SDL2
 if (ENABLE_SDL2 AND USE_SYSTEM_SDL2)
+    # generic SDL interface that can be sdl2 or sdl2compat depending
+    add_library(project_sdl INTERFACE)
     find_package(SDL2 REQUIRED)
-    add_library(SDL2 INTERFACE)
-    target_link_libraries(SDL2 INTERFACE "${SDL2_LIBRARY}")
-    target_include_directories(SDL2 INTERFACE "${SDL2_INCLUDE_DIR}")
-    add_library(SDL2::SDL2 ALIAS SDL2)
+    target_link_libraries(project_sdl INTERFACE "${SDL2_LIBRARY}")
+    target_include_directories(project_sdl INTERFACE "${SDL2_INCLUDE_DIR}")
 endif()
 
 if (ENABLE_LIBUSB AND USE_SYSTEM_LIBUSB)

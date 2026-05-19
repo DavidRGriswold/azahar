@@ -213,11 +213,13 @@ add_subdirectory(teakra EXCLUDE_FROM_ALL)
 
 # SDL2 is now using sdl3 + sdl2compat
 if (ENABLE_SDL2 AND NOT USE_SYSTEM_SDL2)
+    # generic SDL interface that can be sdl2 or sdl2compat depending
+    add_library(project_sdl INTERFACE)
     # # SDL3 (required by SDL2compat)
     set(SDL_SHARED ON CACHE BOOL "" FORCE)
     set(SDL_STATIC OFF CACHE BOOL "" FORCE)
     # disable X11 testing to stop build errors on linux
-        set(SDL_X11_XTEST OFF CACHE BOOL "" FORCE)
+    set(SDL_X11_XTEST OFF CACHE BOOL "" FORCE)
     set(SDL_X11_XCURSOR OFF CACHE BOOL "" FORCE)
     set(SDL_X11_XDBE OFF CACHE BOOL "" FORCE)
     set(SDL_X11_XFIXES OFF CACHE BOOL "" FORCE)
@@ -226,12 +228,17 @@ if (ENABLE_SDL2 AND NOT USE_SYSTEM_SDL2)
     set(SDL_X11_XSCRNSAVER OFF CACHE BOOL "" FORCE)
     set(SDL_X11_XSHAPE OFF CACHE BOOL "" FORCE)
     set(SDL_X11_XSYNC OFF CACHE BOOL "" FORCE)
-    
+
     add_subdirectory(sdl3)
 
     # SDL2compat on top of SDL3
     set(SDL2COMPAT_VENDORED OFF CACHE BOOL "" FORCE)
     add_subdirectory(sdl2-compat)
+    target_link_libraries(project_sdl INTERFACE 
+        SDL2::SDL2 
+        SDL3::SDL3
+        )
+
 endif()
 
 # libusb

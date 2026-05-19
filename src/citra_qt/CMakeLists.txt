@@ -270,7 +270,7 @@ if (WIN32)
 endif()
 
 if(ENABLE_SDL2)
-    target_link_libraries(citra_qt PRIVATE SDL2::SDL2)
+    target_link_libraries(citra_qt PRIVATE project_sdl)
     target_compile_definitions(citra_qt PRIVATE HAVE_SDL2)
 endif()
 
