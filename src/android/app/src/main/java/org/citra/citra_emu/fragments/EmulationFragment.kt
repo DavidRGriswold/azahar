@@ -35,7 +35,6 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.Insets
@@ -199,7 +198,11 @@ class EmulationFragment :
         retainInstance = true
         emulationState = EmulationState(game.path)
         screenAdjustmentUtil =
-            ScreenAdjustmentUtil(requireContext(), requireActivity().windowManager, Settings.settings)
+            ScreenAdjustmentUtil(
+                requireContext(),
+                requireActivity().windowManager,
+                Settings.settings
+            )
         EmulationLifecycleUtil.addPauseResumeHook(onPause)
         EmulationLifecycleUtil.addShutdownHook(onShutdown)
     }
@@ -752,8 +755,10 @@ class EmulationFragment :
                 }
 
                 R.id.menu_performance_overlay_show -> {
-                    Settings.settings.update(BooleanSetting.PERF_OVERLAY_ENABLE,
-                        Settings.settings.get(BooleanSetting.PERF_OVERLAY_ENABLE))
+                    Settings.settings.update(
+                        BooleanSetting.PERF_OVERLAY_ENABLE,
+                        Settings.settings.get(BooleanSetting.PERF_OVERLAY_ENABLE)
+                    )
                     SettingsFile.saveSetting(BooleanSetting.PERF_OVERLAY_ENABLE, Settings.settings)
                     updateShowPerformanceOverlay()
                     true

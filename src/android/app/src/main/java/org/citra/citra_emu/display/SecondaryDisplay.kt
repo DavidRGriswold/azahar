@@ -20,7 +20,8 @@ import org.citra.citra_emu.features.settings.model.BooleanSetting
 import org.citra.citra_emu.features.settings.model.Settings
 import org.citra.citra_emu.utils.Log
 
-class SecondaryDisplay(val context: Context, private val settings: Settings) : DisplayManager.DisplayListener {
+class SecondaryDisplay(val context: Context, private val settings: Settings) :
+    DisplayManager.DisplayListener {
     private var pres: SecondaryDisplayPresentation? = null
     private val displayManager = context.getSystemService(Context.DISPLAY_SERVICE) as DisplayManager
     private val vd: VirtualDisplay
@@ -89,7 +90,7 @@ class SecondaryDisplay(val context: Context, private val settings: Settings) : D
             // Theoretically, the NONE option is no longer selectable, but
             // I am leaving this in for backwards compatibility
             settings.get(IntSetting.SECONDARY_DISPLAY_LAYOUT) == SecondaryDisplayLayout.NONE.int ||
-            ! settings.get(BooleanSetting.ENABLE_SECONDARY_DISPLAY)
+            !settings.get(BooleanSetting.ENABLE_SECONDARY_DISPLAY)
         ) {
             currentDisplayId = -1
             vd.display
