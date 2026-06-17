@@ -45,6 +45,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.drawerlayout.widget.DrawerLayout.DrawerListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
@@ -1479,7 +1480,7 @@ class EmulationFragment :
                 val dividerString = "\u00A0\u2502 "
                 if (perfStats[fps] > 0) {
                     if (Settings.settings.get(BooleanSetting.PERF_OVERLAY_SHOW_FPS)) {
-                        sb.append(String.format("FPS:\u00A0%d", (perfStats[FPS] + 0.5).toInt()))
+                        sb.append(String.format("FPS:\u00A0%d", (perfStats[fps] + 0.5).toInt()))
                     }
 
                     if (Settings.settings.get(BooleanSetting.PERF_OVERLAY_SHOW_FRAMETIME)) {

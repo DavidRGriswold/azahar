@@ -155,7 +155,7 @@ object SettingsFile {
             Log.error("[SettingsFile] File not found: $FILE_NAME_CONFIG.ini: ${e.message}")
             view?.showToastMessage(
                 CitraApplication.appContext
-                    .getString(R.string.error_saving, fileName, e.message),
+                    .getString(R.string.error_saving, FILE_NAME_CONFIG, e.message),
                 false
             )
         }
